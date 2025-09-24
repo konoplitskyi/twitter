@@ -151,6 +151,7 @@ class _FeedPageState extends State<FeedPage> {
           child: CircleAvatar(backgroundColor: Colors.grey[800]),
         ),
         title: Image.asset('assets/images/logo.png', width: 24, height: 24),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {},
