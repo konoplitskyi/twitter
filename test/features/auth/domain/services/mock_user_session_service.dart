@@ -1,12 +1,8 @@
 import 'package:twitter/features/auth/data/datasources/session_local_data_source.dart';
+import 'package:twitter/features/auth/domain/entities/user_session_entity.dart';
 import 'package:twitter/features/auth/domain/services/user_session_service.dart';
 
 class MockUserSessionService implements UserSessionService {
-  @override
-  Future<String?> getUserSession() async {
-    return 'mock_token';
-  }
-
   @override
   Future<bool> isLoggedIn() async {
     return true;
@@ -16,10 +12,18 @@ class MockUserSessionService implements UserSessionService {
   Future<void> logout() async {}
 
   @override
-  Future<void> persistUserSession({required String token}) async {}
-
-  @override
-  // TODO: implement sessionLocalDataSource
   SessionLocalDataSource get sessionLocalDataSource =>
       throw UnimplementedError();
+
+  @override
+  Future<UserSessionEntity?> getUserSession() async {
+    return UserSessionEntity(
+      id: '123',
+      email: 'vova.konopliyskyj@gmail.com',
+      token: 'token',
+    );
+  }
+
+  @override
+  Future<void> persistSession({required UserSessionEntity userSession}) async {}
 }

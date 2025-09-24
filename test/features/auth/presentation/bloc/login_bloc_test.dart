@@ -6,12 +6,14 @@ import 'package:twitter/features/auth/presentation/login/bloc/login_event.dart';
 import 'package:twitter/features/auth/presentation/login/bloc/login_state.dart';
 
 import '../../data/repository/mock_auth_repository.dart';
+import '../../domain/services/mock_user_session_service.dart';
 
 void main() {
   group('LoginBloc test', () {
     late LoginBloc loginBloc;
     late LoginBloc loginBlocWithRepositoryError;
-    late MockUserSessionService mockUserSessionService;
+    final MockUserSessionService mockUserSessionService =
+        MockUserSessionService();
 
     setUp(() {
       loginBloc = LoginBloc(

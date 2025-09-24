@@ -1,4 +1,5 @@
 import 'package:twitter/features/auth/domain/entities/user_entity.dart';
+import 'package:twitter/features/auth/domain/entities/user_session_entity.dart';
 import 'package:twitter/features/auth/domain/repository/auth_repository.dart';
 
 class RegisterUseCase {
@@ -6,7 +7,7 @@ class RegisterUseCase {
 
   RegisterUseCase({required this.authRepository});
 
-  Future<String> call({
+  Future<UserSessionEntity> call({
     required String email,
     required String username,
     required String password,

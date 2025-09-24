@@ -18,6 +18,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _checkSession() async {
+    // await widget.userSessionService.logout();
     final isLoggedIn = await widget.userSessionService.isLoggedIn();
     if (!mounted) return;
     if (isLoggedIn) {

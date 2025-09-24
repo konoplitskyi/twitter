@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twitter/features/auth/presentation/Login/bloc/Login_bloc.dart';
 import 'package:twitter/features/auth/presentation/login/bloc/login_event.dart';
 import 'package:twitter/features/auth/presentation/login/bloc/login_state.dart';
+import 'package:twitter/features/feed/presentation/screens/widgets/build_text_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -27,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      backgroundColor: Colors.black,
       body: Padding(
         padding: EdgeInsetsGeometry.all(16),
         child: BlocListener<LoginBloc, LoginState>(
@@ -53,29 +54,66 @@ class _LoginPageState extends State<LoginPage> {
               }
 
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(labelText: 'Email'),
+                  SizedBox(height: 40),
+                  Image.asset('assets/images/logo.png', width: 32, height: 32),
+                  SizedBox(height: 40),
+                  Column(
+                    children: [
+                      buildTextField(
+                        controller: _emailController,
+                        label: 'Email',
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      SizedBox(height: 20),
+                      buildTextField(
+                        controller: _passwordController,
+                        label: 'Password',
+                        obscureText: true,
+                      ),
+                    ],
                   ),
-                  TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(labelText: 'Password'),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _onLoginPressed,
-                    child: Text('Login'),
-                  ),
-                  SizedBox(height: 20),
-                  if (state is LoginFailure)
-                    Text(state.message, style: TextStyle(color: Colors.red)),
-                  if (state is LoginSuccess)
-                    Text(
-                      'Login successfully!!',
-                      style: TextStyle(color: Colors.green),
+                  SizedBox(height: 30),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: state is LoginLoading ? null : _onLoginPressed,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: state is LoginLoading
+                          ? SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Login',
+                              style: TextStyle(color: Colors.white),
+                            ),
                     ),
+                  ),
+                  SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/register');
+                    },
+                    child: Text(
+                      "Don't have an account? Register here",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
                 ],
               );
             },

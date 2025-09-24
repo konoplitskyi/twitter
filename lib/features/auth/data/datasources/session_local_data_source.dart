@@ -1,9 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:twitter/features/auth/domain/entities/user_session_entity.dart';
 
 abstract class SessionLocalDataSource {
-  Future<void> saveToken({required String token});
-  Future<String?> getToken();
-  Future<void> deleteToken();
+  Future<void> saveSession({required UserSessionEntity session});
+  Future<UserSessionEntity?> getSession();
+  Future<void> clearSession();
 }
 
 class SessionLocalDataSourceImpl implements SessionLocalDataSource {
@@ -12,19 +13,33 @@ class SessionLocalDataSourceImpl implements SessionLocalDataSource {
   SessionLocalDataSourceImpl({required this.secureStorage});
 
   static const _keyToken = 'auth_token';
+  static const _keyUserId = 'user_id';
+  static const _keyUserEmail = 'user_email';
 
   @override
-  Future<void> deleteToken() async {
-    await secureStorage.delete(key: _keyToken);
+  Future<void> saveSession({required UserSessionEntity session}) async {
+    await secureStorage.write(key: _keyToken, value: session.token);
+    await secureStorage.write(key: _keyUserId, value: session.id);
+    await secureStorage.write(key: _keyUserEmail, value: session.email);
   }
 
   @override
-  Future<String?> getToken() async {
-    return await secureStorage.read(key: _keyToken);
+  Future<UserSessionEntity?> getSession() async {
+    final token = await secureStorage.read(key: _keyToken);
+    final id = await secureStorage.read(key: _keyUserId);
+    final email = await secureStorage.read(key: _keyUserEmail);
+    if (token == null || id == null || email == null) {
+      return null;
+    }
+    return UserSessionEntity(id: id, email: email, token: token);
   }
 
   @override
-  Future<void> saveToken({required String token}) async {
-    await secureStorage.write(key: _keyToken, value: token);
+  Future<void> clearSession() async {
+    await Future.wait([
+      secureStorage.delete(key: _keyToken),
+      secureStorage.delete(key: _keyUserId),
+      secureStorage.delete(key: _keyUserEmail),
+    ]);
   }
 }
